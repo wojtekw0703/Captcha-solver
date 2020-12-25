@@ -4,12 +4,11 @@ import time
 
 pageurl = 'https://www.google.com/recaptcha/api2/demo'
 
-driver = webdriver.Chrome(executable_path=r'chromedriver_win32\chromedriver.exe')
+driver = webdriver.Chrome(executable_path="C:\\Windows\\chromedriver.exe")
 driver.get(pageurl)
 site_key = "6Le-wvkSAAAAAPBMRTvw0Q4Muexq9bi0DJwx_mJ-"
 
-with open(r"api_key.txt", "r") as f:
-  api_key = f.read()
+api_key = "b2e30cda325371e0f3954a1db0af613"
 
 form = {"method": "userrecaptcha",
         "googlekey": site_key,
@@ -19,3 +18,16 @@ form = {"method": "userrecaptcha",
 
 response = requests.post('http://2captcha.com/in.php', data=form)
 request_id = response.json()['request']
+url = f"http://2captcha.com/res.php?key={api_key}&action=get&id={request_id}&json=1"
+
+status = 0
+while not status:
+    res = requests.get(url)
+    if res.json()['status'] == 0:
+        time.sleep(1)
+    else:
+        requ = res.json()['request']
+        js = f'document.getElementById("g-recaptcha-response").innerHTML="{requ}";'
+        driver.execute_script(js)
+        driver.find_element_by_id("recaptcha-demo-submit").submit()
+        status = 1
