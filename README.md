@@ -1,5 +1,4 @@
 # Captcha-solver
-# Captcha-solver
 It is a simple script that is focused on bypassing captcha using 2captcha API. 
 
 ## Requirements
